@@ -1,2 +1,3 @@
 # Minefarm 4: Kingdoms
-[https://discord.gg/rCWSTuHJJ3](Discord Server)
+[Discord Server](https://discord.gg/rCWSTuHJJ3)
+
