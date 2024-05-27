@@ -26,11 +26,11 @@ export default function LiveProvider({ children }) {
   function refresh(init = true) {
     if (init && moment().diff(lastRefreshed).valueOf() < 5000) return;
 
-    fetch('/api/money')
+    fetch('/api/money', { cache: 'no-store' })
       .then((res) => res.json())
       .then(({ money }) => setData((data) => ({ ...data, money })));
 
-    fetch('/api/bids')
+    fetch('/api/bids', { cache: 'no-store' })
       .then((res) => res.json())
       .then(({ bids }) => setData((data) => ({ ...data, bids })));
 
