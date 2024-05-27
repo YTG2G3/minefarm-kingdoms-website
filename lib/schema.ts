@@ -18,7 +18,8 @@ export const users = pgTable('user', {
   image: text('image'),
   king: boolean('king').default(false),
   ign: text('ign'),
-  team: text('team')
+  team: text('team'),
+  admin: boolean('admin').default(false)
 });
 
 export const accounts = pgTable(

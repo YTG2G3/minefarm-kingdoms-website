@@ -14,6 +14,7 @@ export type AuthSession = Session & {
     ign: string;
     money: number;
     team: string;
+    admin: boolean;
   };
 };
 

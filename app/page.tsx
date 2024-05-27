@@ -37,10 +37,11 @@ export default async function Page() {
                     .map((_, c) => (
                       <Cell
                         key={`${18 - r}.${c}`}
-                        r={18 - r}
-                        c={c}
+                        r={19 - r}
+                        c={c + 1}
                         king={session.user.king}
                         team={session.user.team}
+                        admin={session.user.admin}
                       />
                     ))
                 )
@@ -48,6 +49,7 @@ export default async function Page() {
             </div>
             <Actions
               players={players.filter((p) => p.id !== session.user.id)}
+              admin={session.user.admin}
             />
           </div>
 

@@ -21,12 +21,14 @@ export default function Cell({
   r,
   c,
   king,
-  team
+  team,
+  admin
 }: {
   r: number;
   c: number;
   king: boolean;
   team: string;
+  admin: boolean;
 }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { data, refresh } = useContext(LiveContext);
@@ -55,13 +57,24 @@ export default function Cell({
   //   }
   // ];
   const occupied = specificbids.length > 0;
-  const minamt = occupied ? Math.ceil(specificbids[0].amount * 1.1) : 100;
+  const minamt = occupied ? Math.ceil(specificbids[0].amount * 1.1) : 5000;
   const confirmed = occupied && specificbids[0]?.confirmed;
   const [bidAmount, setBidAmount] = useState(minamt);
+  const [fteam, setFteam] = useState('');
   const lastBid = occupied && specificbids[0]?.team === team;
   const did5MinutesPass =
     occupied &&
     moment().diff(moment(specificbids[0]?.createdAt)).valueOf() > 300000;
+  const adjacentToLandOfOurs = data.bids.some(
+    (bid) =>
+      (bid.team === team &&
+        bid.confirmed &&
+        bid.row === r - 1 &&
+        bid.col === c) ||
+      (bid.row === r + 1 && bid.col === c) ||
+      (bid.row === r && bid.col === c - 1) ||
+      (bid.row === r && bid.col === c + 1)
+  );
 
   function placeBid(onClose) {
     fetch('/api/auction', {
@@ -78,7 +91,18 @@ export default function Cell({
     fetch('/api/land', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ r: r + 1, c: c + 1 })
+      body: JSON.stringify({ r, c })
+    }).then(() => {
+      refresh();
+      onClose();
+    });
+  }
+
+  function declareLandForce(onClose) {
+    fetch('/api/land', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ r, c, team: fteam })
     }).then(() => {
       refresh();
       onClose();
@@ -88,16 +112,18 @@ export default function Cell({
   return (
     <>
       <Tooltip
-        content={`R${r + 1} C${c + 1}, ${occupied ? (confirmed ? 'Occupied' : 'Auction') : 'Unoccupied'}`}
+        content={`R${r} C${c}, ${occupied ? (confirmed ? 'Occupied' : 'Auction') : 'Unoccupied'}`}
       >
         <div
-          className={`h-10 w-10 ${occupied ? 'border-none' : 'border-4'} rounded-lg ${confirmed ? 'opacity-100' : occupied ? 'opacity-25' : 'opacity-100'} ${confirmed || !king ? 'cursor-default' : 'cursor-pointer'}`}
+          className={`h-10 w-10 ${occupied ? 'border-none' : 'border-4'} rounded-lg ${confirmed ? 'opacity-100' : occupied ? 'opacity-25' : 'opacity-100'} ${!admin && (confirmed || !adjacentToLandOfOurs) ? 'cursor-default' : 'cursor-pointer'}`}
           style={{
             backgroundColor: occupied
               ? teamToColor(specificbids[0].team)
               : 'transparent'
           }}
-          onClick={confirmed || !king ? null : onOpen}
+          onClick={
+            !admin && (confirmed || !adjacentToLandOfOurs) ? null : onOpen
+          }
         />
       </Tooltip>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -105,7 +131,7 @@ export default function Cell({
           {(onClose) => (
             <>
               <ModalHeader>
-                Land Auction at R{r + 1} C{c + 1}
+                Land Auction at R{r} C{c}
               </ModalHeader>
               <ModalBody className="space-y-2">
                 <ScrollShadow className="max-h-[400px]">
@@ -127,18 +153,22 @@ export default function Cell({
                   ))}
                 </ScrollShadow>
 
-                {!lastBid ? (
-                  <div className="flex items-center space-x-3">
-                    <Input
-                      type="number"
-                      placeholder={`$${minamt}`}
-                      min={minamt}
-                      max={data.money}
-                      label={`Bid Amount (min 10% increase)`}
-                      value={bidAmount + ''}
-                      onChange={(e) => setBidAmount(Number(e.target.value))}
-                    />
-                  </div>
+                {admin ? (
+                  <Input
+                    placeholder="Team"
+                    value={fteam}
+                    onChange={(e) => setFteam(e.target.value)}
+                  />
+                ) : !lastBid ? (
+                  <Input
+                    type="number"
+                    placeholder={`$${minamt}`}
+                    min={minamt}
+                    max={data.money}
+                    label={`Bid Amount (min 10% increase)`}
+                    value={bidAmount + ''}
+                    onChange={(e) => setBidAmount(Number(e.target.value))}
+                  />
                 ) : !did5MinutesPass ? (
                   <div className="text-sm text-success">
                     You are the last bidder! Please wait 5 minutes before
@@ -150,7 +180,14 @@ export default function Cell({
                 <Button color="danger" variant="light" onPress={onClose}>
                   Close
                 </Button>
-                {!lastBid ? (
+                {admin ? (
+                  <Button
+                    color="danger"
+                    onPress={() => declareLandForce(onClose)}
+                  >
+                    Declare
+                  </Button>
+                ) : !lastBid ? (
                   <Button color="primary" onPress={() => placeBid(onClose)}>
                     Place Bid
                   </Button>
