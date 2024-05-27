@@ -25,21 +25,21 @@ export async function POST(req: NextRequest) {
     if (amount < Math.ceil(lastBid[0].amount * 1.1))
       return Response.json({ error: 'Bid too low' }, { status: 400 });
     // Adjacency test
-    if (
-      !lastBid.some(
-        (bid) =>
-          bid.team === session.user.team &&
-          bid.confirmed &&
-          ((bid.row === r - 1 && bid.col === c) ||
-            (bid.row === r + 1 && bid.col === c) ||
-            (bid.row === r && bid.col === c - 1) ||
-            (bid.row === r && bid.col === c + 1))
-      )
-    )
-      return Response.json(
-        { error: 'Not adjacent to your land' },
-        { status: 400 }
-      );
+    // if (
+    //   !lastBid.some(
+    //     (bid) =>
+    //       bid.team === session.user.team &&
+    //       bid.confirmed &&
+    //       ((bid.row === r - 1 && bid.col === c) ||
+    //         (bid.row === r + 1 && bid.col === c) ||
+    //         (bid.row === r && bid.col === c - 1) ||
+    //         (bid.row === r && bid.col === c + 1))
+    //   )
+    // )
+    //   return Response.json(
+    //     { error: 'Not adjacent to your land' },
+    //     { status: 400 }
+    //   );
     await db.insert(bids).values({
       amount,
       row: r,
@@ -51,21 +51,21 @@ export async function POST(req: NextRequest) {
     if (amount < 5000)
       return Response.json({ error: 'Bid too low' }, { status: 400 });
     // Adjacency test
-    if (
-      !lastBid.some(
-        (bid) =>
-          bid.team === session.user.team &&
-          bid.confirmed &&
-          ((bid.row === r - 1 && bid.col === c) ||
-            (bid.row === r + 1 && bid.col === c) ||
-            (bid.row === r && bid.col === c - 1) ||
-            (bid.row === r && bid.col === c + 1))
-      )
-    )
-      return Response.json(
-        { error: 'Not adjacent to your land' },
-        { status: 400 }
-      );
+    // if (
+    //   !lastBid.some(
+    //     (bid) =>
+    //       bid.team === session.user.team &&
+    //       bid.confirmed &&
+    //       ((bid.row === r - 1 && bid.col === c) ||
+    //         (bid.row === r + 1 && bid.col === c) ||
+    //         (bid.row === r && bid.col === c - 1) ||
+    //         (bid.row === r && bid.col === c + 1))
+    //   )
+    // )
+    //   return Response.json(
+    //     { error: 'Not adjacent to your land' },
+    //     { status: 400 }
+    //   );
     await db.insert(bids).values({
       amount,
       row: r,
