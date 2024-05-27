@@ -28,13 +28,12 @@ export async function POST(req: NextRequest) {
     if (
       !lastBid.some(
         (bid) =>
-          (bid.team === session.user.team &&
-            bid.confirmed &&
-            bid.row === r - 1 &&
-            bid.col === c) ||
-          (bid.row === r + 1 && bid.col === c) ||
-          (bid.row === r && bid.col === c - 1) ||
-          (bid.row === r && bid.col === c + 1)
+          bid.team === session.user.team &&
+          bid.confirmed &&
+          ((bid.row === r - 1 && bid.col === c) ||
+            (bid.row === r + 1 && bid.col === c) ||
+            (bid.row === r && bid.col === c - 1) ||
+            (bid.row === r && bid.col === c + 1))
       )
     )
       return Response.json(
@@ -55,13 +54,12 @@ export async function POST(req: NextRequest) {
     if (
       !lastBid.some(
         (bid) =>
-          (bid.team === session.user.team &&
-            bid.confirmed &&
-            bid.row === r - 1 &&
-            bid.col === c) ||
-          (bid.row === r + 1 && bid.col === c) ||
-          (bid.row === r && bid.col === c - 1) ||
-          (bid.row === r && bid.col === c + 1)
+          bid.team === session.user.team &&
+          bid.confirmed &&
+          ((bid.row === r - 1 && bid.col === c) ||
+            (bid.row === r + 1 && bid.col === c) ||
+            (bid.row === r && bid.col === c - 1) ||
+            (bid.row === r && bid.col === c + 1))
       )
     )
       return Response.json(

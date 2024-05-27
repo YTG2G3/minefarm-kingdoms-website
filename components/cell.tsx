@@ -67,13 +67,12 @@ export default function Cell({
     moment().diff(moment(specificbids[0]?.createdAt)).valueOf() > 300000;
   const adjacentToLandOfOurs = data.bids.some(
     (bid) =>
-      (bid.team === team &&
-        bid.confirmed &&
-        bid.row === r - 1 &&
-        bid.col === c) ||
-      (bid.row === r + 1 && bid.col === c) ||
-      (bid.row === r && bid.col === c - 1) ||
-      (bid.row === r && bid.col === c + 1)
+      bid.team === team &&
+      bid.confirmed &&
+      ((bid.row === r - 1 && bid.col === c) ||
+        (bid.row === r + 1 && bid.col === c) ||
+        (bid.row === r && bid.col === c - 1) ||
+        (bid.row === r && bid.col === c + 1))
   );
 
   function placeBid(onClose) {
