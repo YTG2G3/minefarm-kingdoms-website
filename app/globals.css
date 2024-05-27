@@ -2,32 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer base {
+  body {
+    @apply noselect bg-background text-foreground;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .grid-rows-screen {
+    grid-template-rows: auto auto 1fr;
+  }
+
+  .grid-board {
+    grid-template-columns: repeat(19, minmax(0, 1fr));
+    grid-template-rows: repeat(19, minmax(0, 1fr));
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+  }
+
+  .select {
+    -webkit-touch-callout: default; /* iOS Safari */
+    -webkit-user-select: default; /* Safari */
+    -khtml-user-select: default; /* Konqueror HTML */
+    -moz-user-select: default; /* Old versions of Firefox */
+    -ms-user-select: default; /* Internet Explorer/Edge */
+    user-select: default; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
   }
 }

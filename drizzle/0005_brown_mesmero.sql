@@ -1,0 +1,1 @@
+ALTER TABLE "bid" ADD COLUMN "amount" integer NOT NULL;
