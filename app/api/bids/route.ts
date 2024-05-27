@@ -2,7 +2,9 @@ import { db } from '@/lib/db';
 import { bids } from '@/lib/schema';
 import { desc } from 'drizzle-orm';
 
-export async function GET() {
+export async function GET(req: Request) {
+  console.log(req.method);
+  
   const data = await db
     .select()
     .from(bids)
