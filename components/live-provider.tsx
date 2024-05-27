@@ -1,5 +1,6 @@
 'use client';
 
+import { getBids } from '@/lib/getbids';
 import { bids } from '@/lib/schema';
 import moment from 'moment';
 import { createContext, useEffect, useState } from 'react';
@@ -30,9 +31,7 @@ export default function LiveProvider({ children }) {
       .then((res) => res.json())
       .then(({ money }) => setData((data) => ({ ...data, money })));
 
-    fetch('/api/bids', { cache: 'no-store' })
-      .then((res) => res.json())
-      .then(({ bids }) => setData((data) => ({ ...data, bids })));
+    getBids().then((bids) => setData((data) => ({ ...data, bids })));
 
     setLastRefreshed(Date.now());
   }
