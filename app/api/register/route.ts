@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   if (!session || !session.user.admin)
     return Response.json({ error: 'Not logged in' }, { status: 401 });
 
-  await db.update(users).set({ ign, team }).where(eq(users.id, id)).execute();
+  await db.update(users).set({ ign, team }).where(eq(users.name, id)).execute();
 
   return Response.json({ error: null });
 }
