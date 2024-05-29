@@ -1,7 +1,8 @@
 'use client';
 
 import { getBids } from '@/lib/getbids';
-import { bids } from '@/lib/schema';
+import { getItems } from '@/lib/getitems';
+import { bids, marketItems } from '@/lib/schema';
 import moment from 'moment';
 import { createContext, useEffect, useState } from 'react';
 
@@ -9,10 +10,12 @@ export const LiveContext = createContext<{
   data: {
     money: number;
     bids: (typeof bids.$inferSelect)[];
+    items: (typeof marketItems.$inferSelect)[];
   };
   setData: (data: {
     money: number;
     bids: (typeof bids.$inferSelect)[];
+    items: (typeof marketItems.$inferSelect)[];
   }) => void;
   refresh: () => void;
 }>(null);
@@ -20,7 +23,8 @@ export const LiveContext = createContext<{
 export default function LiveProvider({ children }) {
   const [data, setData] = useState({
     money: 0,
-    bids: []
+    bids: [],
+    items: []
   });
   const [lastRefreshed, setLastRefreshed] = useState(Date.now());
 
@@ -32,6 +36,8 @@ export default function LiveProvider({ children }) {
       .then(({ money }) => setData((data) => ({ ...data, money })));
 
     getBids().then((bids) => setData((data) => ({ ...data, bids })));
+
+    getItems().then((items) => setData((data) => ({ ...data, items })));
 
     setLastRefreshed(Date.now());
   }

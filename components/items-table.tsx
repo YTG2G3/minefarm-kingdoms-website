@@ -23,11 +23,7 @@ import { IconCoin, IconShoppingCart } from '@tabler/icons-react';
 import { useContext, useState } from 'react';
 import { LiveContext } from './live-provider';
 
-export default function ItemsTable({
-  items
-}: {
-  items: (typeof marketItems.$inferSelect)[];
-}) {
+export default function ItemsTable() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { data, refresh } = useContext(LiveContext);
   const [item, setItem] = useState<typeof marketItems.$inferSelect>(null);
@@ -67,7 +63,7 @@ export default function ItemsTable({
           <TableColumn align="center">Actions</TableColumn>
         </TableHeader>
         <TableBody>
-          {items.map((item) => (
+          {data.items.map((item) => (
             <TableRow key={item.id}>
               <TableCell className="flex items-center space-x-3">
                 <Image

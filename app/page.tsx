@@ -12,7 +12,6 @@ export default async function Page() {
   let session = await auth();
   if (!session) return <Login />;
 
-  const items = await db.select().from(marketItems).execute();
   const players = await db.select().from(users).execute();
 
   return (
@@ -53,7 +52,7 @@ export default async function Page() {
             />
           </div>
 
-          <ItemsTable items={items} />
+          <ItemsTable />
         </div>
       </main>
     </div>
